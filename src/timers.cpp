@@ -1,6 +1,6 @@
 #include "timers.h"
+#include "rpm.h"
 #include "usart.h"
-
 unsigned long previousMillis = 0; // will store last time LED was updated
 volatile unsigned long currentMillis = 0;
 TimerCallbackPtr timerCallback = nullptr; // timer 1s event callback
@@ -71,21 +71,45 @@ void initTimer2()
     // set pin to output mode
     pinMode(OC2B_PIN, OUTPUT);
 }
+void setPWM(uint8_t ch, uint8_t pwm)
+{
+    switch (ch) {
+    case 0:
+        setPWM0(pwm);
+        break;
 
+    case 1:
+        setPWM1(pwm);
+        break;
+
+    case 2:
+        setPWM2(pwm);
+        break;
+
+    default:
+        setPWM0(pwm);
+        setPWM1(pwm);
+        setPWM2(pwm);
+        break;
+    }
+}
 void setPWM0(uint8_t pwm)
 {
     pwm = pwm > 100 ? 100 : pwm;
     OCR1A = (uint16_t)(((uint16_t)320 * pwm) / 100);
+    setPwm(0, pwm);
 }
 
 void setPWM1(uint8_t pwm)
 {
     pwm = pwm > 100 ? 100 : pwm;
     OCR1B = (uint16_t)(((uint16_t)320 * pwm) / 100);
+    setPwm(1, pwm);
 }
 
 void setPWM2(uint8_t pwm)
 {
     pwm = pwm > 100 ? 100 : pwm;
     OCR2B = (uint8_t)(((uint16_t)79 * pwm) / 100);
+    setPwm(2, pwm);
 }

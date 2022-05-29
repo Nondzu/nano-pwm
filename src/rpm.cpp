@@ -2,10 +2,10 @@
 #include "Arduino.h"
 #include "PinChangeInterrupt.h"
 
-
 struct tachometer {
     uint32_t rpm;
     uint32_t rpmCnt;
+    uint32_t pwm;
 };
 
 struct tachometer tacho[CHANNEL_NUMBER];
@@ -35,3 +35,5 @@ void rpmInit()
 }
 
 uint32_t rpmGet(uint8_t channel) { return channel < CHANNEL_NUMBER ? tacho[channel].rpm : 0; }
+uint32_t rpmGetPwm(uint8_t channel) { return channel < CHANNEL_NUMBER ? tacho[channel].pwm : 0; }
+void setPwm(uint8_t channel, uint8_t pwm) { tacho[channel].pwm = pwm; }
