@@ -1,22 +1,27 @@
 #include "timers.h"
 #include <Arduino.h>
+#include "rpm.h"
 #define LED 13
 
 void my1sEvent() { 
     Serial.println("1s callback");
+    Serial.println(rpm1);
+    // Serial.println(rpm1);
+
 }
 
 void setup()
 {
-    // cli(); // stop interrupts
     pinMode(OC1A_PIN, OUTPUT);
     pinMode(OC1B_PIN, OUTPUT);
     pinMode(LED, OUTPUT);
 
     // init isr
     digitalWrite(2, HIGH); // Instead of using a pull up resistor
+    rpmInit();
 
     timerRegisterCallback(my1sEvent);
+    
     // init serial
     Serial.begin(9600);
 }
