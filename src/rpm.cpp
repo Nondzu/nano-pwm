@@ -2,20 +2,40 @@
 #include "Arduino.h"
 #include "PinChangeInterrupt.h"
 
-#define INTERRUPT_PIN 2
+#define RPM_PIN1 2
+#define RPM_PIN2 3
+#define RPM_PIN3 4
 
-int rpm1 = 0;
-void interruptRoutine();
+#define CHANNEL_NUMBER 3
+struct tachometer {
+    uint32_t rpm;
+    uint32_t rpmCnt;
+};
+
+struct tachometer tacho[CHANNEL_NUMBER];
+
+void rpmCal()
+{
+    for (uint8_t i = 0; i < CHANNEL_NUMBER; i++) {
+        tacho[i].rpm = tacho[i].rpmCnt * 60 / 2;
+        tacho[i].rpmCnt = 0;
+    }
+}
+
+void interruptRPM1() { tacho[0].rpmCnt++; }
+void interruptRPM2() { tacho[1].rpmCnt++; };
+void interruptRPM3() { tacho[2].rpmCnt++; };
 
 void rpmInit()
 {
+    // pullup pins
+    pinMode(RPM_PIN1, INPUT_PULLUP);
+    pinMode(RPM_PIN2, INPUT_PULLUP);
+    pinMode(RPM_PIN3, INPUT_PULLUP);
     // init pcint interrupt
-    pinMode(INTERRUPT_PIN, INPUT_PULLUP);
-    attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(INTERRUPT_PIN), interruptRoutine, FALLING);
+    attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(RPM_PIN1), interruptRPM1, FALLING);
+    attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(RPM_PIN2), interruptRPM2, FALLING);
+    attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(RPM_PIN3), interruptRPM3, FALLING);
 }
 
-void interruptRoutine()
-{
-    //   ?digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-    rpm1++;
-}
+uint32_t rpmGet(uint8_t channel) { return channel < CHANNEL_NUMBER ? tacho[channel].rpm : 0; }

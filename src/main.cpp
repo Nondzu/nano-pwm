@@ -1,13 +1,20 @@
+#include "rpm.h"
 #include "timers.h"
 #include <Arduino.h>
-#include "rpm.h"
 #define LED 13
 
-void my1sEvent() { 
-    Serial.println("1s callback");
-    Serial.println(rpm1);
+void my1sEvent()
+{
+    // Serial.println("1s callback");
     // Serial.println(rpm1);
+    rpmCal();
 
+    for (uint8_t i = 0; i < 4; i++) {
+        Serial.print("channel ");
+        Serial.print(i);
+        Serial.print(" rpm: ");
+        Serial.println(rpmGet(i));
+    }
 }
 
 void setup()
@@ -21,7 +28,7 @@ void setup()
     rpmInit();
 
     timerRegisterCallback(my1sEvent);
-    
+
     // init serial
     Serial.begin(9600);
 }
@@ -33,7 +40,6 @@ bool toggle0 = false;
 
 void loop()
 {
-    
     if (Serial.available() > 0) {
         rx[bufPos] = Serial.read();
         Serial.println("reading");
@@ -44,5 +50,5 @@ void loop()
             bufPos++;
     }
 
-    timer();// timer function for 1s events
+    timer(); // timer function for 1s events
 }
