@@ -2,11 +2,7 @@
 #include "Arduino.h"
 #include "PinChangeInterrupt.h"
 
-#define RPM_PIN1 2
-#define RPM_PIN2 3
-#define RPM_PIN3 4
 
-#define CHANNEL_NUMBER 3
 struct tachometer {
     uint32_t rpm;
     uint32_t rpmCnt;

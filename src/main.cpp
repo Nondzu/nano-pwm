@@ -3,12 +3,10 @@
 #include <Arduino.h>
 #define LED 13
 
+void at();
 void my1sEvent()
 {
-    // Serial.println("1s callback");
-    // Serial.println(rpm1);
-    rpmCal();
-
+    rpmCal();   // to calculate rpm value from FAN tachometer
     for (uint8_t i = 0; i < 4; i++) {
         Serial.print("channel ");
         Serial.print(i);
@@ -19,36 +17,56 @@ void my1sEvent()
 
 void setup()
 {
-    pinMode(OC1A_PIN, OUTPUT);
-    pinMode(OC1B_PIN, OUTPUT);
     pinMode(LED, OUTPUT);
 
-    // init isr
-    digitalWrite(2, HIGH); // Instead of using a pull up resistor
     rpmInit();
-
+    timerInit();
     timerRegisterCallback(my1sEvent);
 
     // init serial
     Serial.begin(9600);
+
+    setPWM0(40);//450
+    setPWM1(75);//840
+    setPWM2(15);
 }
 
-bool toggle1 = false;
-char rx[100];
-u8 bufPos = 0;
+
+
 bool toggle0 = false;
+uint8_t pwm = 50;
 
 void loop()
 {
+    at();
+    timer(); // timer function for 1s events
+}
+
+
+//AT commands system
+char rx[100];
+u8 bufPos = 0;
+
+void at() {
     if (Serial.available() > 0) {
         rx[bufPos] = Serial.read();
-        Serial.println("reading");
+
+        if (rx[bufPos] == '+') {
+            pwm++;
+        } else if (rx[bufPos] == '-') {
+            pwm--;
+        }
+        setPWM0(pwm);
+        setPWM1(pwm);
+        setPWM2(pwm);
+
         if (rx[bufPos] == '\n') {
-            Serial.println("new line");
+
+            at();
+            Serial.print(": pwm :");
+            Serial.println(pwm);
             bufPos = 0;
         } else
             bufPos++;
     }
-
-    timer(); // timer function for 1s events
 }
