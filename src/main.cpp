@@ -6,7 +6,6 @@
 #define LED 13
 bool toggle0 = false;
 
-
 void my1sEvent()
 {
     rpmCal(); // to calculate rpm value from FAN tachometer
@@ -26,9 +25,9 @@ void setup()
     // init serial
     Serial.begin(9600);
 
-    setPWM0(40); // 450
-    setPWM1(75); // 840
-    setPWM2(15);
+    setPWM0(100); // 450
+    setPWM1(100); // 840
+    setPWM2(100);
 }
 
 void loop()

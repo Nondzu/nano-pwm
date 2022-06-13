@@ -51,18 +51,18 @@ void at()
 void printPwmInfo()
 {
     for (uint8_t i = 0; i < 3; i++) {
-        Serial.print("channel ");
+        Serial.print(F("channel "));
         Serial.print(i);
-        Serial.print(" pwm: ");
+        Serial.print(F(" pwm: "));
         Serial.println(rpmGetPwm(i));
     }
 }
 void printRpmInfo()
 {
     for (uint8_t i = 0; i < 3; i++) {
-        Serial.print("channel ");
+        Serial.print(F("channel "));
         Serial.print(i);
-        Serial.print(" rpm: ");
+        Serial.print(F(" rpm: "));
         Serial.println(rpmGet(i));
     }
 }
