@@ -18,7 +18,7 @@ void rpmCal()
     }
 }
 
-void interruptRPM1() { tacho[0].rpmCnt++; }
+void interruptRPM1() { tacho[0].rpmCnt++; };
 void interruptRPM2() { tacho[1].rpmCnt++; };
 void interruptRPM3() { tacho[2].rpmCnt++; };
 

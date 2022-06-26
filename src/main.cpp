@@ -25,9 +25,9 @@ void setup()
     // init serial
     Serial.begin(9600);
 
-    setPWM0(100); // 450
-    setPWM1(100); // 840
-    setPWM2(100);
+    setPWM0(50); // 450
+    setPWM1(50); // 840
+    setPWM2(50);
 }
 
 void loop()
